@@ -132,17 +132,50 @@ new Chart(document.getElementById('revenueChart'), {
   type: 'bar',
   data: {
     labels: data.map(d => d.label),
-    datasets: [{
-      label: 'Doanh thu (đ)',
-      data: data.map(d => d.value),
-      backgroundColor: 'rgba(99,102,241,0.8)',
-      borderRadius: 8,
-    }]
+    datasets: [
+      {
+        label: 'Doanh thu (đ)',
+        data: data.map(d => d.value),
+        backgroundColor: data.map((d, i) => i === data.length - 1 ? 'rgba(99,102,241,0.4)' : 'rgba(99,102,241,0.85)'),
+        borderColor: 'rgba(99,102,241,1)',
+        borderWidth: 1,
+        borderRadius: 6,
+        order: 2,
+      },
+      {
+        label: 'Xu hướng',
+        data: data.map(d => d.value),
+        type: 'line',
+        borderColor: 'rgba(245,158,11,1)',
+        backgroundColor: 'rgba(245,158,11,0.1)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(245,158,11,1)',
+        pointRadius: 4,
+        fill: false,
+        tension: 0.4,
+        order: 1,
+      }
+    ]
   },
   options: {
     responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString('vi-VN') + 'đ' } } }
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.parsed.y.toLocaleString('vi-VN') + 'đ'
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => (v / 1000000).toFixed(1) + 'tr' },
+        grid: { color: 'rgba(0,0,0,0.05)' }
+      },
+      x: { grid: { display: false } }
+    }
   }
 });
 </script>

@@ -113,13 +113,55 @@ new Chart(document.getElementById('usageChart'), {
   data: {
     labels: data.map(d => d.label),
     datasets: [
-      { label: 'Điện (kWh)', data: data.map(d => d.electric), backgroundColor: 'rgba(245,158,11,0.8)', borderRadius: 6 },
-      { label: 'Nước (m³)', data: data.map(d => d.water), backgroundColor: 'rgba(59,130,246,0.8)', borderRadius: 6 },
+      {
+        label: 'Điện (kWh)',
+        data: data.map(d => d.electric),
+        backgroundColor: 'rgba(245,158,11,0.85)',
+        borderRadius: 5,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Nước (m³)',
+        data: data.map(d => d.water),
+        backgroundColor: 'rgba(59,130,246,0.85)',
+        borderRadius: 5,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Tổng tiền',
+        data: data.map(d => d.total),
+        type: 'line',
+        borderColor: 'rgba(99,102,241,1)',
+        backgroundColor: 'rgba(99,102,241,0.1)',
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: 'rgba(99,102,241,1)',
+        fill: false,
+        tension: 0.4,
+        yAxisID: 'y2',
+      }
     ]
   },
   options: {
     responsive: true,
-    scales: { y: { beginAtZero: true } }
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            if (ctx.dataset.yAxisID === 'y2')
+              return ' Tổng tiền: ' + ctx.parsed.y.toLocaleString('vi-VN') + 'đ';
+            return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y;
+          }
+        }
+      }
+    },
+    scales: {
+      y:  { beginAtZero: true, position: 'left',  grid: { color: 'rgba(0,0,0,0.05)' }, title: { display: true, text: 'Chỉ số' } },
+      y2: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: v => (v/1000000).toFixed(1)+'tr' }, title: { display: true, text: 'Tiền (đ)' } },
+      x:  { grid: { display: false } }
+    }
   }
 });
 </script>
