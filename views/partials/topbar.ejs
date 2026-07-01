@@ -1,0 +1,19 @@
+<header class="topbar">
+  <button class="btn btn-sm btn-light sidebar-toggle" id="sidebarToggle">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  <div class="topbar-title"><%= title %></div>
+  <div class="topbar-user">
+    <% if (currentUser) { %>
+      <div class="d-flex align-items-center gap-2">
+        <div class="user-avatar-sm">
+          <%= currentUser.fullName.charAt(0).toUpperCase() %>
+        </div>
+        <div class="d-none d-md-block">
+          <div class="fw-semibold small"><%= currentUser.fullName %></div>
+          <div class="text-muted" style="font-size:11px"><%= currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách thuê' %></div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</header>
