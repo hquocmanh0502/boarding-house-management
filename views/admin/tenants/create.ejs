@@ -1,0 +1,64 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-user-plus me-2 text-primary"></i>Thêm khách thuê mới</h4>
+  <a href="/admin/tenants" class="btn btn-outline-secondary">
+    <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
+  </a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/tenants/create" method="POST">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+              <input type="text" name="fullName" class="form-control" placeholder="VD: Hoàng Quốc Mạnh" required/>
+              <small class="text-muted">Tài khoản và mật khẩu sẽ được tự động tạo từ tên + năm sinh</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày sinh <span class="text-danger">*</span></label>
+              <input type="date" name="birthDate" class="form-control" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" name="phone" class="form-control" placeholder="0xxxxxxxxx"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Số CCCD / CMND</label>
+              <input type="text" name="idCard" class="form-control" placeholder="Nhập số CCCD..."/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Gán vào phòng</label>
+              <select name="roomId" class="form-select">
+                <option value="">— Chọn phòng —</option>
+                <% rooms.forEach(r => { %>
+                  <option value="<%= r._id %>">
+                    Phòng <%= r.roomNumber %> (<%= r.status === 'available' ? 'Còn trống' : 'Đang có người' %>) — <%= r.rentPrice.toLocaleString('vi-VN') %>đ/tháng
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="alert alert-info mt-3 small">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            <strong>Quy tắc tạo tài khoản:</strong><br>
+            • Username: <code>tên + năm sinh</code> (VD: <code>manh2004</code>)<br>
+            • Mật khẩu: <code>Tên@năm sinh</code> (VD: <code>Manh@2004</code>)<br>
+            Thông tin sẽ hiển thị sau khi tạo thành công.
+          </div>
+
+          <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-user-plus me-2"></i>Tạo tài khoản khách thuê
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>
