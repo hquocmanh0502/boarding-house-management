@@ -1,0 +1,71 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-pen me-2 text-primary"></i>Sửa Phòng <%= room.roomNumber %></h4>
+  <a href="/admin/rooms" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/rooms/<%= room._id %>/edit" method="POST">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Số phòng</label>
+              <input type="text" name="roomNumber" class="form-control" value="<%= room.roomNumber %>" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tầng</label>
+              <input type="number" name="floor" class="form-control" value="<%= room.floor %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Diện tích (m²)</label>
+              <input type="number" name="area" class="form-control" value="<%= room.area %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Giá thuê (đ/tháng)</label>
+              <input type="number" name="rentPrice" class="form-control" value="<%= room.rentPrice %>" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số người tối đa</label>
+              <input type="number" name="maxOccupants" class="form-control" value="<%= room.maxOccupants %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Trạng thái</label>
+              <select name="status" class="form-select">
+                <option value="available" <%= room.status==='available'?'selected':'' %>>Còn trống</option>
+                <option value="occupied" <%= room.status==='occupied'?'selected':'' %>>Đang có người</option>
+                <option value="maintenance" <%= room.status==='maintenance'?'selected':'' %>>Bảo trì</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tiện nghi</label>
+              <div class="d-flex flex-wrap gap-3 mt-1">
+                <% [['wifi','fa-wifi','Wifi'], ['ac','fa-snowflake','Điều hòa'], ['wc','fa-shower','WC riêng'], ['parking','fa-motorcycle','Gửi xe'], ['kitchen','fa-fire-burner','Bếp']].forEach(([val, icon, label]) => { %>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="<%= val %>"
+                      id="am_<%= val %>" <%= room.amenities && room.amenities.includes(val) ? 'checked' : '' %>/>
+                    <label class="form-check-label" for="am_<%= val %>">
+                      <i class="fa-solid <%= icon %> me-1"></i><%= label %>
+                    </label>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Mô tả</label>
+              <textarea name="description" class="form-control" rows="3"><%= room.description || '' %></textarea>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Lưu thay đổi
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>

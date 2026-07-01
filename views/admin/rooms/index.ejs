@@ -1,0 +1,83 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-door-open me-2 text-primary"></i>Quản lý phòng trọ</h4>
+  <a href="/admin/rooms/create" class="btn btn-primary">
+    <i class="fa-solid fa-plus me-1"></i> Thêm phòng
+  </a>
+</div>
+
+<div class="row g-3">
+<% rooms.forEach(room => { %>
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="fw-bold mb-1">Phòng <%= room.roomNumber %></h5>
+            <span class="text-muted small">Tầng <%= room.floor %> • <%= room.area || '?' %> m²</span>
+          </div>
+          <span class="badge-<%= room.status %>">
+            <%= room.status === 'available' ? 'Trống' : room.status === 'occupied' ? 'Có người' : 'Bảo trì' %>
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <div class="d-flex justify-content-between text-sm mb-1">
+            <span class="text-muted small">Giá thuê</span>
+            <strong class="text-primary"><%= room.rentPrice.toLocaleString('vi-VN') %>đ/tháng</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted small">Số người</span>
+            <span class="small"><%= room.tenants.length %>/<%= room.maxOccupants %> người</span>
+          </div>
+        </div>
+
+        <% if (room.amenities && room.amenities.length > 0) { %>
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          <% room.amenities.forEach(a => { %>
+            <span class="badge bg-light text-dark border" style="font-size:11px;border-radius:6px;">
+              <% if (a === 'wifi') { %><i class="fa-solid fa-wifi me-1"></i><% } %>
+              <% if (a === 'ac') { %><i class="fa-solid fa-snowflake me-1"></i><% } %>
+              <% if (a === 'wc') { %><i class="fa-solid fa-shower me-1"></i><% } %>
+              <% if (a === 'parking') { %><i class="fa-solid fa-motorcycle me-1"></i><% } %>
+              <% if (a === 'kitchen') { %><i class="fa-solid fa-fire-burner me-1"></i><% } %>
+              <%= a.toUpperCase() %>
+            </span>
+          <% }) %>
+        </div>
+        <% } %>
+
+        <% if (room.tenants.length > 0) { %>
+        <div class="mb-3">
+          <div class="text-muted small mb-1">Người thuê:</div>
+          <% room.tenants.slice(0,3).forEach(t => { %>
+            <span class="badge bg-light text-dark border me-1" style="border-radius:6px;"><%= t.fullName %></span>
+          <% }) %>
+          <% if (room.tenants.length > 3) { %><span class="text-muted small">+<%= room.tenants.length - 3 %></span><% } %>
+        </div>
+        <% } %>
+
+        <div class="d-flex gap-2 mt-auto">
+          <a href="/admin/rooms/<%= room._id %>/edit" class="btn btn-sm btn-outline-primary flex-fill">
+            <i class="fa-solid fa-pen me-1"></i>Sửa
+          </a>
+          <form action="/admin/rooms/<%= room._id %>/delete" method="POST"
+            onsubmit="return confirm('Xác nhận xóa phòng <%= room.roomNumber %>?')">
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% }) %>
+<% if (rooms.length === 0) { %>
+  <div class="col-12 text-center py-5 text-muted">
+    <i class="fa-solid fa-door-open fa-3x mb-3 d-block opacity-25"></i>
+    Chưa có phòng nào. <a href="/admin/rooms/create">Thêm phòng đầu tiên</a>
+  </div>
+<% } %>
+</div>
+
+<%- include('../../partials/footer') %>

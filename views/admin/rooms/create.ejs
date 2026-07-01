@@ -1,0 +1,62 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-plus me-2 text-primary"></i>Thêm phòng mới</h4>
+  <a href="/admin/rooms" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/rooms/create" method="POST">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Số phòng <span class="text-danger">*</span></label>
+              <input type="text" name="roomNumber" class="form-control" placeholder="VD: 101, A1..." required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tầng</label>
+              <input type="number" name="floor" class="form-control" value="1" min="1"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Diện tích (m²)</label>
+              <input type="number" name="area" class="form-control" placeholder="20"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Giá thuê (đ/tháng) <span class="text-danger">*</span></label>
+              <input type="number" name="rentPrice" class="form-control" placeholder="2000000" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số người tối đa</label>
+              <input type="number" name="maxOccupants" class="form-control" value="4" min="1"/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tiện nghi</label>
+              <div class="d-flex flex-wrap gap-3 mt-1">
+                <% [['wifi','fa-wifi','Wifi'], ['ac','fa-snowflake','Điều hòa'], ['wc','fa-shower','WC riêng'], ['parking','fa-motorcycle','Gửi xe'], ['kitchen','fa-fire-burner','Bếp']].forEach(([val, icon, label]) => { %>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="amenities" value="<%= val %>" id="am_<%= val %>"/>
+                    <label class="form-check-label" for="am_<%= val %>">
+                      <i class="fa-solid <%= icon %> me-1"></i><%= label %>
+                    </label>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Mô tả</label>
+              <textarea name="description" class="form-control" rows="3" placeholder="Ghi chú thêm..."></textarea>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-plus me-2"></i>Thêm phòng
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>
