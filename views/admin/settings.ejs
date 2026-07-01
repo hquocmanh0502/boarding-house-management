@@ -1,0 +1,84 @@
+<%- include('../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-gear me-2 text-primary"></i>Cài đặt hệ thống</h4>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <form action="/admin/settings" method="POST">
+      <div class="card mb-3">
+        <div class="card-header bg-white py-3 px-4">
+          <h6 class="mb-0 fw-bold"><i class="fa-solid fa-bolt me-2 text-warning"></i>Giá điện & Nước</h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Giá điện (đ/kWh)</label>
+              <input type="number" name="electricPrice" class="form-control" value="<%= settings.electricPrice %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Giá nước (đ/m³)</label>
+              <input type="number" name="waterPrice" class="form-control" value="<%= settings.waterPrice %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Phí dịch vụ (đ/người)</label>
+              <input type="number" name="servicePrice" class="form-control" value="<%= settings.servicePrice %>"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-header bg-white py-3 px-4">
+          <h6 class="mb-0 fw-bold"><i class="fa-solid fa-building-columns me-2 text-success"></i>Thông tin ngân hàng</h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Tên ngân hàng</label>
+              <input type="text" name="bankName" class="form-control" value="<%= settings.bankName %>" placeholder="VD: Vietcombank"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Số tài khoản</label>
+              <input type="text" name="bankAccount" class="form-control" value="<%= settings.bankAccount %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Chủ tài khoản</label>
+              <input type="text" name="bankOwner" class="form-control" value="<%= settings.bankOwner %>"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header bg-white py-3 px-4">
+          <h6 class="mb-0 fw-bold"><i class="fa-solid fa-user-tie me-2 text-primary"></i>Thông tin chủ nhà</h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Tên chủ nhà</label>
+              <input type="text" name="landlordName" class="form-control" value="<%= settings.landlordName %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" name="landlordPhone" class="form-control" value="<%= settings.landlordPhone %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Địa chỉ nhà trọ</label>
+              <input type="text" name="address" class="form-control" value="<%= settings.address %>"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary py-2">
+          <i class="fa-solid fa-floppy-disk me-2"></i>Lưu cài đặt
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

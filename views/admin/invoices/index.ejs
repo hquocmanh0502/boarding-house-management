@@ -1,0 +1,90 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>Quản lý hóa đơn</h4>
+  <a href="/admin/invoices/create" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Tạo hóa đơn</a>
+</div>
+
+<!-- Filter -->
+<div class="card mb-3">
+  <div class="card-body py-3 px-4">
+    <form class="d-flex gap-3 align-items-center flex-wrap" method="GET">
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 small fw-semibold">Tháng:</label>
+        <select name="month" class="form-select form-select-sm" style="width:80px">
+          <% for(let m=1;m<=12;m++) { %><option value="<%= m %>" <%= m===currentMonth?'selected':'' %>><%= m %></option><% } %>
+        </select>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0 small fw-semibold">Năm:</label>
+        <input type="number" name="year" class="form-control form-control-sm" style="width:90px" value="<%= currentYear %>"/>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Lọc</button>
+    </form>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-3">
+    <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-check"></i></div>
+      <div><div class="stat-value"><%= (invoices.length - unpaidCount) %></div><div class="stat-label">Đã thanh toán</div></div></div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card"><div class="stat-icon red"><i class="fa-solid fa-clock"></i></div>
+      <div><div class="stat-value"><%= unpaidCount %></div><div class="stat-label">Chưa thanh toán</div></div></div>
+  </div>
+  <div class="col-12 col-md-6">
+    <div class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div><div class="stat-value"><%= totalRevenue.toLocaleString('vi-VN') %>đ</div><div class="stat-label">Tổng thu tháng <%= currentMonth %>/<%= currentYear %></div></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr>
+          <th>Mã HĐ</th><th>Phòng</th><th>Tháng</th><th>Điện</th><th>Nước</th><th>Dịch vụ</th><th>Tổng tiền</th><th>Trạng thái</th><th>Hành động</th>
+        </tr></thead>
+        <tbody>
+        <% if (invoices.length === 0) { %>
+          <tr><td colspan="9" class="text-center py-5 text-muted">Không có hóa đơn trong tháng này</td></tr>
+        <% } %>
+        <% invoices.forEach(inv => { %>
+          <tr>
+            <td><code><%= inv.invoiceCode %></code></td>
+            <td><strong>Phòng <%= inv.room?.roomNumber %></strong></td>
+            <td><%= inv.month %>/<%= inv.year %></td>
+            <td><%= inv.electricTotal.toLocaleString('vi-VN') %>đ</td>
+            <td><%= inv.waterTotal.toLocaleString('vi-VN') %>đ</td>
+            <td><%= inv.serviceTotal.toLocaleString('vi-VN') %>đ</td>
+            <td><strong><%= inv.totalAmount.toLocaleString('vi-VN') %>đ</strong></td>
+            <td>
+              <% if (inv.isPaid) { %><span class="badge-paid">Đã TT</span>
+              <% } else { %><span class="badge-unpaid">Chưa TT</span><% } %>
+            </td>
+            <td>
+              <a href="/admin/invoices/<%= inv._id %>" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <% if (!inv.isPaid) { %>
+              <form action="/admin/invoices/<%= inv._id %>/pay" method="POST" class="d-inline">
+                <button class="btn btn-sm btn-success" title="Xác nhận thanh toán">
+                  <i class="fa-solid fa-check"></i>
+                </button>
+              </form>
+              <% } %>
+              <form action="/admin/invoices/<%= inv._id %>/delete" method="POST" class="d-inline"
+                onsubmit="return confirm('Xóa hóa đơn này?')">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>
