@@ -1,0 +1,127 @@
+<%- include('../partials/header-user') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-gauge-high me-2 text-primary"></i>Xin chào, <%= user?.fullName %> 👋</h4>
+  <span class="text-muted small">Phòng <%= user?.room?.roomNumber || '—' %></span>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="fa-solid fa-door-open"></i></div>
+      <div>
+        <div class="stat-value">P.<%= user?.room?.roomNumber || '?' %></div>
+        <div class="stat-label">Phòng của tôi</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <div class="stat-value"><%= currentInvoice ? currentInvoice.electricUsage + ' kWh' : '—' %></div>
+        <div class="stat-label">Điện tháng này</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fa-solid fa-droplet"></i></div>
+      <div>
+        <div class="stat-value"><%= currentInvoice ? currentInvoice.waterUsage + ' m³' : '—' %></div>
+        <div class="stat-label">Nước tháng này</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon <%= currentInvoice && !currentInvoice.isPaid ? 'red' : 'green' %>">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+      </div>
+      <div>
+        <div class="stat-value" style="font-size:18px">
+          <%= currentInvoice ? currentInvoice.totalAmount.toLocaleString('vi-VN') + 'đ' : '—' %>
+        </div>
+        <div class="stat-label">
+          <% if (currentInvoice) { %>
+            <%= currentInvoice.isPaid ? '✓ Đã thanh toán' : '⚠ Chưa thanh toán' %>
+          <% } else { %>Hóa đơn tháng này<% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Biểu đồ -->
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header bg-white py-3 px-4">
+        <h6 class="mb-0 fw-bold"><i class="fa-solid fa-chart-bar me-2 text-primary"></i>Điện & Nước 6 tháng gần nhất</h6>
+      </div>
+      <div class="card-body p-4">
+        <canvas id="usageChart" height="130"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hóa đơn tháng này -->
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white py-3 px-4">
+        <h6 class="mb-0 fw-bold"><i class="fa-solid fa-file-invoice me-2 text-warning"></i>Hóa đơn tháng này</h6>
+      </div>
+      <div class="card-body p-4">
+        <% if (currentInvoice) { %>
+          <div class="d-flex justify-content-between py-2 border-bottom small">
+            <span class="text-muted">Tiền điện</span>
+            <strong><%= currentInvoice.electricTotal.toLocaleString('vi-VN') %>đ</strong>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom small">
+            <span class="text-muted">Tiền nước</span>
+            <strong><%= currentInvoice.waterTotal.toLocaleString('vi-VN') %>đ</strong>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom small">
+            <span class="text-muted">Dịch vụ</span>
+            <strong><%= currentInvoice.serviceTotal.toLocaleString('vi-VN') %>đ</strong>
+          </div>
+          <div class="d-flex justify-content-between py-2 border-bottom small">
+            <span class="text-muted">Tiền phòng</span>
+            <strong><%= currentInvoice.rentPrice.toLocaleString('vi-VN') %>đ</strong>
+          </div>
+          <div class="d-flex justify-content-between py-2 mt-1">
+            <span class="fw-bold">TỔNG</span>
+            <span class="fw-bold text-primary"><%= currentInvoice.totalAmount.toLocaleString('vi-VN') %>đ</span>
+          </div>
+          <a href="/user/invoices/<%= currentInvoice._id %>" class="btn btn-primary btn-sm w-100 mt-3">
+            <i class="fa-solid fa-eye me-1"></i>Xem chi tiết & Chuyển khoản
+          </a>
+        <% } else { %>
+          <div class="text-center py-4 text-muted small">
+            <i class="fa-solid fa-file-circle-question fa-2x mb-2 d-block opacity-25"></i>
+            Chưa có hóa đơn tháng này
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const data = <%- chartData %>;
+new Chart(document.getElementById('usageChart'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.label),
+    datasets: [
+      { label: 'Điện (kWh)', data: data.map(d => d.electric), backgroundColor: 'rgba(245,158,11,0.8)', borderRadius: 6 },
+      { label: 'Nước (m³)', data: data.map(d => d.water), backgroundColor: 'rgba(59,130,246,0.8)', borderRadius: 6 },
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+
+<%- include('../partials/footer') %>

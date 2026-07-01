@@ -1,0 +1,31 @@
+<%- include('../partials/header-user') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-bell me-2 text-primary"></i>Thông báo</h4>
+</div>
+
+<div class="row g-3">
+<% notifications.forEach(n => { %>
+  <div class="col-12">
+    <div class="card border-start border-3 border-primary">
+      <div class="card-body p-4">
+        <div class="d-flex gap-2 align-items-center mb-1">
+          <span class="badge bg-primary bg-opacity-10 text-primary" style="font-size:11px;border-radius:6px">
+            <%= n.type === 'general' ? '📢 Chung' : n.type === 'invoice' ? '💰 Hóa đơn' : n.type === 'maintenance' ? '🔧 Bảo trì' : '📌 Khác' %>
+          </span>
+          <span class="text-muted small"><%= new Date(n.createdAt).toLocaleString('vi-VN') %></span>
+        </div>
+        <h6 class="fw-bold mb-1"><%= n.title %></h6>
+        <p class="text-muted small mb-0"><%= n.content %></p>
+      </div>
+    </div>
+  </div>
+<% }) %>
+<% if (notifications.length === 0) { %>
+  <div class="col-12 text-center py-5 text-muted">
+    <i class="fa-solid fa-bell-slash fa-3x mb-3 d-block opacity-25"></i>
+    Không có thông báo nào
+  </div>
+<% } %>
+</div>
+
+<%- include('../partials/footer') %>

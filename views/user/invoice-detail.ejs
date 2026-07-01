@@ -1,0 +1,74 @@
+<%- include('../partials/header-user') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>Hóa đơn tháng <%= invoice.month %>/<%= invoice.year %></h4>
+  <div class="d-flex gap-2">
+    <button onclick="window.print()" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-print me-1"></i>In</button>
+    <a href="/user/invoices" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i>Quay lại</a>
+  </div>
+</div>
+
+<div class="invoice-box">
+  <div class="invoice-header">
+    <div>
+      <h5 class="fw-bold text-primary mb-1">HÓA ĐƠN TIỀN PHÒNG</h5>
+      <div class="text-muted small">Mã: <strong><%= invoice.invoiceCode %></strong></div>
+      <div class="text-muted small">Tháng <%= invoice.month %>/<%= invoice.year %></div>
+    </div>
+    <div class="text-end">
+      <div class="fw-bold">Phòng <%= invoice.room?.roomNumber %></div>
+      <% if (invoice.isPaid) { %><span class="badge-paid">✓ Đã thanh toán</span>
+      <% } else { %><span class="badge-unpaid">⚠ Chưa thanh toán</span><% } %>
+    </div>
+  </div>
+
+  <table class="table table-sm mb-4">
+    <thead><tr><th>Khoản mục</th><th>Chi tiết</th><th class="text-end">Thành tiền</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><i class="fa-solid fa-bolt text-warning me-1"></i>Tiền điện</td>
+        <td class="text-muted small"><%= inv = invoice; inv.electricNewIndex %> - <%= inv.electricOldIndex %> = <strong><%= inv.electricUsage %> kWh</strong> × <%= inv.electricPrice.toLocaleString('vi-VN') %>đ</td>
+        <td class="text-end"><%= invoice.electricTotal.toLocaleString('vi-VN') %>đ</td>
+      </tr>
+      <tr>
+        <td><i class="fa-solid fa-droplet text-primary me-1"></i>Tiền nước</td>
+        <td class="text-muted small"><%= invoice.waterNewIndex %> - <%= invoice.waterOldIndex %> = <strong><%= invoice.waterUsage %> m³</strong> × <%= invoice.waterPrice.toLocaleString('vi-VN') %>đ</td>
+        <td class="text-end"><%= invoice.waterTotal.toLocaleString('vi-VN') %>đ</td>
+      </tr>
+      <tr>
+        <td><i class="fa-solid fa-concierge-bell text-success me-1"></i>Phí dịch vụ</td>
+        <td class="text-muted small"><%= invoice.servicePrice.toLocaleString('vi-VN') %>đ × <%= invoice.numOfTenants %> người</td>
+        <td class="text-end"><%= invoice.serviceTotal.toLocaleString('vi-VN') %>đ</td>
+      </tr>
+      <tr>
+        <td><i class="fa-solid fa-house me-1"></i>Tiền phòng</td>
+        <td class="text-muted small">Tháng <%= invoice.month %>/<%= invoice.year %></td>
+        <td class="text-end"><%= invoice.rentPrice.toLocaleString('vi-VN') %>đ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="invoice-total mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="fw-semibold">TỔNG CỘNG PHẢI THANH TOÁN</span>
+      <span class="fs-4 fw-bold"><%= invoice.totalAmount.toLocaleString('vi-VN') %>đ</span>
+    </div>
+  </div>
+
+  <% if (settings.bankAccount && !invoice.isPaid) { %>
+  <div class="p-3 bg-light rounded-3">
+    <h6 class="fw-bold mb-3"><i class="fa-solid fa-building-columns me-2 text-success"></i>Thông tin chuyển khoản</h6>
+    <div class="row g-2 small">
+      <div class="col-6"><strong>Ngân hàng:</strong></div><div class="col-6"><%= settings.bankName %></div>
+      <div class="col-6"><strong>Số tài khoản:</strong></div>
+      <div class="col-6"><code class="fs-6 fw-bold"><%= settings.bankAccount %></code></div>
+      <div class="col-6"><strong>Chủ TK:</strong></div><div class="col-6"><%= settings.bankOwner %></div>
+      <div class="col-6"><strong>Số tiền:</strong></div>
+      <div class="col-6 text-danger fw-bold"><%= invoice.totalAmount.toLocaleString('vi-VN') %>đ</div>
+      <div class="col-6"><strong>Nội dung CK:</strong></div>
+      <div class="col-6"><code>P<%= invoice.room?.roomNumber %> T<%= invoice.month %>/<%= invoice.year %></code></div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

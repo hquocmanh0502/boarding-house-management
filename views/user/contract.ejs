@@ -1,0 +1,58 @@
+<%- include('../partials/header-user') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-file-contract me-2 text-primary"></i>Hợp đồng thuê trọ</h4>
+</div>
+
+<% if (contract) { %>
+<div class="invoice-box">
+  <div class="text-center mb-4">
+    <h5 class="fw-bold">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</h5>
+    <p class="text-muted small">Độc lập - Tự do - Hạnh phúc</p>
+    <h5 class="fw-bold mt-3">HỢP ĐỒNG THUÊ NHÀ TRỌ</h5>
+    <p class="text-muted small">Mã: <strong><%= contract.contractCode %></strong></p>
+    <span class="badge-<%= contract.status %>">
+      <%= contract.status === 'active' ? '✓ Đang hiệu lực' : contract.status === 'expired' ? 'Hết hạn' : 'Đã chấm dứt' %>
+    </span>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">BÊN CHO THUÊ (A)</h6>
+      <div class="small"><strong>Tên:</strong> <%= settings.landlordName || '—' %></div>
+      <div class="small"><strong>SĐT:</strong> <%= settings.landlordPhone || '—' %></div>
+      <div class="small"><strong>Địa chỉ:</strong> <%= settings.address || '—' %></div>
+    </div>
+    <div class="col-md-6">
+      <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">BÊN THUÊ (B)</h6>
+      <div class="small"><strong>Họ tên:</strong> <%= contract.user?.fullName %></div>
+      <div class="small"><strong>SĐT:</strong> <%= contract.user?.phone || '—' %></div>
+      <div class="small"><strong>CCCD:</strong> <%= contract.user?.idCard || '—' %></div>
+    </div>
+  </div>
+
+  <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">THÔNG TIN PHÒNG & GIÁ THUÊ</h6>
+  <div class="row g-2 small mb-4">
+    <div class="col-6"><strong>Phòng số:</strong> <%= contract.room?.roomNumber %></div>
+    <div class="col-6"><strong>Giá thuê:</strong> <%= contract.rentPrice.toLocaleString('vi-VN') %>đ/tháng</div>
+    <div class="col-6"><strong>Ngày bắt đầu:</strong> <%= moment(contract.startDate).format('DD/MM/YYYY') %></div>
+    <div class="col-6"><strong>Ngày kết thúc:</strong> <%= contract.endDate ? moment(contract.endDate).format('DD/MM/YYYY') : 'Không xác định' %></div>
+    <div class="col-6"><strong>Tiền cọc:</strong> <%= contract.depositAmount.toLocaleString('vi-VN') %>đ</div>
+  </div>
+
+  <% if (contract.terms) { %>
+  <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">ĐIỀU KHOẢN HỢP ĐỒNG</h6>
+  <p class="small" style="white-space:pre-wrap"><%= contract.terms %></p>
+  <% } %>
+
+  <button onclick="window.print()" class="btn btn-outline-secondary btn-sm mt-3">
+    <i class="fa-solid fa-print me-1"></i>In hợp đồng
+  </button>
+</div>
+<% } else { %>
+  <div class="text-center py-5 text-muted">
+    <i class="fa-solid fa-file-circle-question fa-3x mb-3 d-block opacity-25"></i>
+    Bạn chưa có hợp đồng nào đang hiệu lực
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>
