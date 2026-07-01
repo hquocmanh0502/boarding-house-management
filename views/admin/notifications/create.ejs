@@ -1,0 +1,66 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-paper-plane me-2 text-primary"></i>Gửi thông báo mới</h4>
+  <a href="/admin/notifications" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/notifications/create" method="POST">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Tiêu đề <span class="text-danger">*</span></label>
+              <input type="text" name="title" class="form-control" placeholder="Tiêu đề thông báo..." required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Loại thông báo</label>
+              <select name="type" class="form-select">
+                <option value="general">📢 Thông báo chung</option>
+                <option value="invoice">💰 Liên quan hóa đơn</option>
+                <option value="maintenance">🔧 Sửa chữa / Bảo trì</option>
+                <option value="other">📌 Khác</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Gửi đến</label>
+              <select name="sendTo" class="form-select" id="sendTo">
+                <option value="all">📣 Tất cả khách thuê</option>
+                <option value="rooms">🏠 Chọn phòng cụ thể</option>
+              </select>
+            </div>
+            <div class="col-12" id="roomSelect" style="display:none">
+              <label class="form-label">Chọn phòng</label>
+              <div class="d-flex flex-wrap gap-3">
+                <% rooms.forEach(r => { %>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="targetRooms" value="<%= r._id %>" id="room_<%= r._id %>"/>
+                    <label class="form-check-label" for="room_<%= r._id %>">Phòng <%= r.roomNumber %></label>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Nội dung <span class="text-danger">*</span></label>
+              <textarea name="content" class="form-control" rows="5" placeholder="Nội dung thông báo..." required></textarea>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-paper-plane me-2"></i>Gửi thông báo
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('sendTo').addEventListener('change', function() {
+  document.getElementById('roomSelect').style.display = this.value === 'rooms' ? 'block' : 'none';
+});
+</script>
+
+<%- include('../../partials/footer') %>
