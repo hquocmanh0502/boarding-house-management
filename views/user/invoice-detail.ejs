@@ -26,7 +26,7 @@
     <tbody>
       <tr>
         <td><i class="fa-solid fa-bolt text-warning me-1"></i>Tiền điện</td>
-        <td class="text-muted small"><%= inv = invoice; inv.electricNewIndex %> - <%= inv.electricOldIndex %> = <strong><%= inv.electricUsage %> kWh</strong> × <%= inv.electricPrice.toLocaleString('vi-VN') %>đ</td>
+        <td class="text-muted small"><%= invoice.electricNewIndex %> - <%= invoice.electricOldIndex %> = <strong><%= invoice.electricUsage %> kWh</strong> × <%= invoice.electricPrice.toLocaleString('vi-VN') %>đ</td>
         <td class="text-end"><%= invoice.electricTotal.toLocaleString('vi-VN') %>đ</td>
       </tr>
       <tr>
