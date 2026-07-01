@@ -1,0 +1,70 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-plus me-2 text-primary"></i>Tạo hợp đồng mới</h4>
+  <a href="/admin/contracts" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/contracts/create" method="POST">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Khách thuê <span class="text-danger">*</span></label>
+              <select name="userId" class="form-select" required>
+                <option value="">— Chọn khách thuê —</option>
+                <% tenants.forEach(t => { %>
+                  <option value="<%= t._id %>"><%= t.fullName %> (<%= t.username %>)</option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phòng <span class="text-danger">*</span></label>
+              <select name="roomId" class="form-select" required>
+                <option value="">— Chọn phòng —</option>
+                <% rooms.forEach(r => { %>
+                  <option value="<%= r._id %>" data-rent="<%= r.rentPrice %>">Phòng <%= r.roomNumber %> — <%= r.rentPrice.toLocaleString('vi-VN') %>đ</option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày bắt đầu</label>
+              <input type="date" name="startDate" class="form-control" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày kết thúc</label>
+              <input type="date" name="endDate" class="form-control"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tiền cọc (đ)</label>
+              <input type="number" name="depositAmount" class="form-control" value="0"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Giá thuê/tháng (đ)</label>
+              <input type="number" name="rentPrice" id="rentPrice" class="form-control" value="0" required/>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Điều khoản hợp đồng</label>
+              <textarea name="terms" class="form-control" rows="5"
+                placeholder="VD: Không nuôi động vật, không ở quá giờ giấc quy định..."></textarea>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-file-contract me-2"></i>Tạo hợp đồng
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.querySelector('[name="roomId"]').addEventListener('change', function() {
+  const rent = this.options[this.selectedIndex].dataset.rent || 0;
+  document.getElementById('rentPrice').value = rent;
+});
+</script>
+
+<%- include('../../partials/footer') %>

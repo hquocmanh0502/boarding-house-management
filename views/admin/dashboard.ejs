@@ -1,0 +1,151 @@
+<%- include('../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-gauge-high me-2 text-primary"></i>Dashboard</h4>
+  <span class="text-muted small">Tổng quan hệ thống</span>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="fa-solid fa-door-open"></i></div>
+      <div>
+        <div class="stat-value"><%= totalRooms %></div>
+        <div class="stat-label">Tổng số phòng</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fa-solid fa-people-roof"></i></div>
+      <div>
+        <div class="stat-value"><%= occupiedRooms %></div>
+        <div class="stat-label">Phòng đang thuê</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+      <div>
+        <div class="stat-value"><%= totalTenants %></div>
+        <div class="stat-label">Khách thuê</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fa-solid fa-money-bill-wave"></i></div>
+      <div>
+        <div class="stat-value"><%= revenueThisMonth.toLocaleString('vi-VN') %>đ</div>
+        <div class="stat-label">Doanh thu tháng này</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Biểu đồ doanh thu -->
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header bg-white py-3 px-4 d-flex align-items-center justify-content-between">
+        <h6 class="mb-0 fw-bold"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Doanh thu 6 tháng gần nhất</h6>
+      </div>
+      <div class="card-body p-4">
+        <canvas id="revenueChart" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thông tin nhanh -->
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header bg-white py-3 px-4">
+        <h6 class="mb-0 fw-bold"><i class="fa-solid fa-circle-info me-2 text-warning"></i>Tổng quan</h6>
+      </div>
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted small">Phòng trống</span>
+          <span class="badge-available"><%= availableRooms %> phòng</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted small">Phòng có người</span>
+          <span class="badge-occupied"><%= occupiedRooms %> phòng</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2">
+          <span class="text-muted small">Hóa đơn chưa TT</span>
+          <span class="badge-unpaid"><%= unpaidInvoices %> hóa đơn</span>
+        </div>
+
+        <a href="/admin/invoices/create" class="btn btn-primary btn-sm w-100 mt-3">
+          <i class="fa-solid fa-plus me-1"></i> Tạo hóa đơn mới
+        </a>
+        <a href="/admin/tenants/create" class="btn btn-outline-primary btn-sm w-100 mt-2">
+          <i class="fa-solid fa-user-plus me-1"></i> Thêm khách thuê
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hóa đơn chưa thanh toán -->
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header bg-white py-3 px-4 d-flex align-items-center justify-content-between">
+        <h6 class="mb-0 fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-danger"></i>Hóa đơn chưa thanh toán</h6>
+        <a href="/admin/invoices" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+      </div>
+      <div class="card-body p-0">
+        <% if (recentUnpaid.length === 0) { %>
+          <div class="text-center py-5 text-muted"><i class="fa-solid fa-check-circle fa-2x text-success mb-2 d-block"></i>Không có hóa đơn tồn đọng!</div>
+        <% } else { %>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr>
+              <th>Phòng</th><th>Tháng</th><th>Tổng tiền</th><th>Hành động</th>
+            </tr></thead>
+            <tbody>
+            <% recentUnpaid.forEach(inv => { %>
+              <tr>
+                <td><strong>Phòng <%= inv.room?.roomNumber %></strong></td>
+                <td><%= inv.month %>/<%= inv.year %></td>
+                <td class="fw-bold text-danger"><%= inv.totalAmount.toLocaleString('vi-VN') %>đ</td>
+                <td>
+                  <a href="/admin/invoices/<%= inv._id %>" class="btn btn-sm btn-outline-primary">Xem</a>
+                  <form action="/admin/invoices/<%= inv._id %>/pay" method="POST" class="d-inline">
+                    <button class="btn btn-sm btn-success">Xác nhận TT</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const data = <%- revenueChart %>;
+new Chart(document.getElementById('revenueChart'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.label),
+    datasets: [{
+      label: 'Doanh thu (đ)',
+      data: data.map(d => d.value),
+      backgroundColor: 'rgba(99,102,241,0.8)',
+      borderRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v.toLocaleString('vi-VN') + 'đ' } } }
+  }
+});
+</script>
+
+
+<%- include('../partials/footer') %>
