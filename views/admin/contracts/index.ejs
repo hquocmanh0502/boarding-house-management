@@ -34,6 +34,11 @@
               <a href="/admin/contracts/<%= c._id %>" class="btn btn-sm btn-outline-primary">
                 <i class="fa-solid fa-eye"></i>
               </a>
+              <% if (c.contractImage) { %>
+                <a href="/admin/contracts/<%= c._id %>" class="btn btn-sm btn-outline-success" title="Có ảnh hợp đồng">
+                  <i class="fa-solid fa-image"></i>
+                </a>
+              <% } %>
               <% if (c.status === 'active') { %>
               <form action="/admin/contracts/<%= c._id %>/terminate" method="POST" class="d-inline"
                 onsubmit="return confirm('Chấm dứt hợp đồng này?')">

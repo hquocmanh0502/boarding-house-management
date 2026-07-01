@@ -39,15 +39,38 @@
               </select>
             </div>
             <div class="col-12">
-              <label class="form-label">Tiện nghi</label>
+              <label class="form-label">Tiện nghi có sẵn</label>
               <div class="d-flex flex-wrap gap-3 mt-1">
-                <% [['wifi','fa-wifi','Wifi'], ['ac','fa-snowflake','Điều hòa'], ['wc','fa-shower','WC riêng'], ['parking','fa-motorcycle','Gửi xe'], ['kitchen','fa-fire-burner','Bếp']].forEach(([val, icon, label]) => { %>
+                <% const standardAmenities = ['fridge','ac','wardrobe','bed','wifi','wc','kitchen','parking'];
+                   const standardLabels = {fridge:'Tủ lạnh',ac:'Điều hòa',wardrobe:'Tủ quần áo',bed:'Giường',wifi:'Wifi',wc:'WC riêng',kitchen:'Bếp',parking:'Gửi xe'};
+                   const standardIcons  = {fridge:'fa-temperature-low',ac:'fa-snowflake',wardrobe:'fa-shirt',bed:'fa-bed',wifi:'fa-wifi',wc:'fa-shower',kitchen:'fa-fire-burner',parking:'fa-motorcycle'};
+                   standardAmenities.forEach(val => { %>
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="amenities" value="<%= val %>"
                       id="am_<%= val %>" <%= room.amenities && room.amenities.includes(val) ? 'checked' : '' %>/>
                     <label class="form-check-label" for="am_<%= val %>">
-                      <i class="fa-solid <%= icon %> me-1"></i><%= label %>
+                      <i class="fa-solid <%= standardIcons[val] %> me-1"></i><%= standardLabels[val] %>
                     </label>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+            <!-- Custom amenities -->
+            <div class="col-12">
+              <label class="form-label">Tiện nghi khác (tùy chỉnh)</label>
+              <div class="d-flex gap-2 mb-2">
+                <input type="text" id="customAmenityInput" class="form-control" placeholder="VD: Máy giặt, Ban công..."/>
+                <button type="button" class="btn btn-outline-primary px-3" onclick="addCustomAmenity()">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div id="customAmenityTags" class="d-flex flex-wrap gap-2">
+                <% (room.amenities || []).filter(a => !standardAmenities.includes(a)).forEach(a => { %>
+                  <div class="d-flex align-items-center gap-1 px-3 py-1 rounded-pill border bg-white" style="font-size:13px">
+                    <i class="fa-solid fa-tag text-primary" style="font-size:11px"></i>
+                    <span><%= a %></span>
+                    <input type="hidden" name="amenities" value="<%= a %>"/>
+                    <button type="button" class="btn-close ms-1" style="font-size:9px" onclick="this.parentElement.remove()"></button>
                   </div>
                 <% }) %>
               </div>
@@ -69,3 +92,27 @@
 </div>
 
 <%- include('../../partials/footer') %>
+
+<script>
+function addCustomAmenity() {
+  const input = document.getElementById('customAmenityInput');
+  const val = input.value.trim();
+  if (!val) return;
+  const container = document.getElementById('customAmenityTags');
+  const tag = document.createElement('div');
+  tag.className = 'd-flex align-items-center gap-1 px-3 py-1 rounded-pill border bg-white';
+  tag.style.fontSize = '13px';
+  tag.innerHTML = `
+    <i class="fa-solid fa-tag text-primary" style="font-size:11px"></i>
+    <span>${val}</span>
+    <input type="hidden" name="amenities" value="${val}"/>
+    <button type="button" class="btn-close ms-1" style="font-size:9px" onclick="this.parentElement.remove()"></button>
+  `;
+  container.appendChild(tag);
+  input.value = '';
+  input.focus();
+}
+document.getElementById('customAmenityInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addCustomAmenity(); }
+});
+</script>

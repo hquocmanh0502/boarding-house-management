@@ -9,6 +9,7 @@ const contractSchema = new mongoose.Schema({
   depositAmount:{ type: Number, default: 0 },      // tiền cọc
   rentPrice:    { type: Number, required: true },
   terms:        { type: String },                  // điều khoản hợp đồng
+  contractImage:{ type: String, default: null },   // đường dẫn ảnh hợp đồng
   status:       { type: String, enum: ['active', 'expired', 'terminated'], default: 'active' },
   signedAt:     { type: Date, default: Date.now },
 }, { timestamps: true });

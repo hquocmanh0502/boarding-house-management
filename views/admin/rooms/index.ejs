@@ -34,14 +34,13 @@
 
         <% if (room.amenities && room.amenities.length > 0) { %>
         <div class="d-flex flex-wrap gap-1 mb-3">
+          <% const iconMap = {fridge:'fa-temperature-low',ac:'fa-snowflake',wardrobe:'fa-shirt',bed:'fa-bed',wifi:'fa-wifi',wc:'fa-shower',kitchen:'fa-fire-burner',parking:'fa-motorcycle'};
+             const labelMap = {fridge:'Tủ lạnh',ac:'Điều hòa',wardrobe:'Tủ quần áo',bed:'Giường',wifi:'Wifi',wc:'WC riêng',kitchen:'Bếp',parking:'Gửi xe'};
+          %>
           <% room.amenities.forEach(a => { %>
             <span class="badge bg-light text-dark border" style="font-size:11px;border-radius:6px;">
-              <% if (a === 'wifi') { %><i class="fa-solid fa-wifi me-1"></i><% } %>
-              <% if (a === 'ac') { %><i class="fa-solid fa-snowflake me-1"></i><% } %>
-              <% if (a === 'wc') { %><i class="fa-solid fa-shower me-1"></i><% } %>
-              <% if (a === 'parking') { %><i class="fa-solid fa-motorcycle me-1"></i><% } %>
-              <% if (a === 'kitchen') { %><i class="fa-solid fa-fire-burner me-1"></i><% } %>
-              <%= a.toUpperCase() %>
+              <i class="fa-solid <%= iconMap[a] || 'fa-tag' %> me-1"></i>
+              <%= labelMap[a] || a %>
             </span>
           <% }) %>
         </div>

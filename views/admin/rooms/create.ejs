@@ -31,9 +31,18 @@
               <input type="number" name="maxOccupants" class="form-control" value="4" min="1"/>
             </div>
             <div class="col-12">
-              <label class="form-label">Tiện nghi</label>
+              <label class="form-label">Tiện nghi có sẵn</label>
               <div class="d-flex flex-wrap gap-3 mt-1">
-                <% [['wifi','fa-wifi','Wifi'], ['ac','fa-snowflake','Điều hòa'], ['wc','fa-shower','WC riêng'], ['parking','fa-motorcycle','Gửi xe'], ['kitchen','fa-fire-burner','Bếp']].forEach(([val, icon, label]) => { %>
+                <% [
+                  ['fridge','fa-temperature-low','Tủ lạnh'],
+                  ['ac','fa-snowflake','Điều hòa'],
+                  ['wardrobe','fa-shirt','Tủ quần áo'],
+                  ['bed','fa-bed','Giường'],
+                  ['wifi','fa-wifi','Wifi'],
+                  ['wc','fa-shower','WC riêng'],
+                  ['kitchen','fa-fire-burner','Bếp'],
+                  ['parking','fa-motorcycle','Gửi xe']
+                ].forEach(([val, icon, label]) => { %>
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="amenities" value="<%= val %>" id="am_<%= val %>"/>
                     <label class="form-check-label" for="am_<%= val %>">
@@ -42,6 +51,17 @@
                   </div>
                 <% }) %>
               </div>
+            </div>
+            <!-- Custom amenities -->
+            <div class="col-12">
+              <label class="form-label">Tiện nghi khác (tùy chỉnh)</label>
+              <div class="d-flex gap-2 mb-2">
+                <input type="text" id="customAmenityInput" class="form-control" placeholder="VD: Máy giặt, Ban công..."/>
+                <button type="button" class="btn btn-outline-primary px-3" onclick="addCustomAmenity()">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div id="customAmenityTags" class="d-flex flex-wrap gap-2"></div>
             </div>
             <div class="col-12">
               <label class="form-label">Mô tả</label>
@@ -60,3 +80,28 @@
 </div>
 
 <%- include('../../partials/footer') %>
+
+<script>
+function addCustomAmenity() {
+  const input = document.getElementById('customAmenityInput');
+  const val = input.value.trim();
+  if (!val) return;
+  const container = document.getElementById('customAmenityTags');
+  const id = 'custom_' + Date.now();
+  const tag = document.createElement('div');
+  tag.className = 'd-flex align-items-center gap-1 px-3 py-1 rounded-pill border bg-white';
+  tag.style.fontSize = '13px';
+  tag.innerHTML = `
+    <i class="fa-solid fa-tag text-primary" style="font-size:11px"></i>
+    <span>${val}</span>
+    <input type="hidden" name="amenities" value="${val}"/>
+    <button type="button" class="btn-close ms-1" style="font-size:9px" onclick="this.parentElement.remove()"></button>
+  `;
+  container.appendChild(tag);
+  input.value = '';
+  input.focus();
+}
+document.getElementById('customAmenityInput')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addCustomAmenity(); }
+});
+</script>

@@ -44,10 +44,50 @@
   <p class="small" style="white-space:pre-wrap"><%= contract.terms %></p>
   <% } %>
 
-  <button onclick="window.print()" class="btn btn-outline-secondary btn-sm mt-3">
-    <i class="fa-solid fa-print me-1"></i>In hợp đồng
-  </button>
+  <% if (contract.contractImage) { %>
+  <div class="mt-3 p-3 bg-light rounded-3 d-flex align-items-center gap-3">
+    <i class="fa-solid fa-image fa-2x text-primary"></i>
+    <div>
+      <div class="fw-semibold small">Ảnh hợp đồng đã được tải lên</div>
+      <button class="btn btn-sm btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#imageModal">
+        <i class="fa-solid fa-eye me-1"></i>Xem ảnh hợp đồng
+      </button>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="d-flex gap-2 mt-4">
+    <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-print me-1"></i>In hợp đồng
+    </button>
+  </div>
 </div>
+
+<!-- Modal xem ảnh hợp đồng -->
+<% if (contract && contract.contractImage) { %>
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">
+          <i class="fa-solid fa-image me-2 text-primary"></i>Ảnh hợp đồng — <%= contract.contractCode %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center p-3">
+        <img src="<%= contract.contractImage %>" class="img-fluid rounded-3" style="max-height:80vh; object-fit:contain;" alt="Ảnh hợp đồng"/>
+      </div>
+      <div class="modal-footer">
+        <a href="<%= contract.contractImage %>" download class="btn btn-outline-primary">
+          <i class="fa-solid fa-download me-1"></i>Tải xuống
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
 <% } else { %>
   <div class="text-center py-5 text-muted">
     <i class="fa-solid fa-file-circle-question fa-3x mb-3 d-block opacity-25"></i>

@@ -2,6 +2,11 @@
 <div class="page-header">
   <h4><i class="fa-solid fa-file-contract me-2 text-primary"></i>Hợp đồng <%= contract.contractCode %></h4>
   <div class="d-flex gap-2">
+    <% if (contract.contractImage) { %>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#imageModal">
+        <i class="fa-solid fa-image me-1"></i> Xem ảnh HĐ
+      </button>
+    <% } %>
     <button onclick="window.print()" class="btn btn-outline-secondary"><i class="fa-solid fa-print me-1"></i> In</button>
     <a href="/admin/contracts" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
   </div>
@@ -47,6 +52,18 @@
   <p class="small" style="white-space:pre-wrap"><%= contract.terms %></p>
   <% } %>
 
+  <% if (contract.contractImage) { %>
+  <div class="mt-3 p-3 bg-light rounded-3 d-flex align-items-center gap-3">
+    <i class="fa-solid fa-image fa-2x text-primary"></i>
+    <div>
+      <div class="fw-semibold small">Ảnh hợp đồng đã tải lên</div>
+      <button class="btn btn-sm btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#imageModal">
+        <i class="fa-solid fa-eye me-1"></i>Xem ảnh hợp đồng
+      </button>
+    </div>
+  </div>
+  <% } %>
+
   <% if (contract.status === 'active') { %>
   <form action="/admin/contracts/<%= contract._id %>/terminate" method="POST" class="mt-4"
     onsubmit="return confirm('Xác nhận chấm dứt hợp đồng này?')">
@@ -57,4 +74,31 @@
   <% } %>
 </div>
 
+<!-- Modal xem ảnh hợp đồng -->
+<% if (contract.contractImage) { %>
+<div class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">
+          <i class="fa-solid fa-image me-2 text-primary"></i>Ảnh hợp đồng — <%= contract.contractCode %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center p-3">
+        <img src="<%= contract.contractImage %>" class="img-fluid rounded-3" style="max-height:80vh; object-fit:contain;"
+          alt="Ảnh hợp đồng <%= contract.contractCode %>"/>
+      </div>
+      <div class="modal-footer">
+        <a href="<%= contract.contractImage %>" download class="btn btn-outline-primary">
+          <i class="fa-solid fa-download me-1"></i>Tải xuống
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
 <%- include('../../partials/footer') %>
+
