@@ -10,6 +10,7 @@ const { setLocals } = require('./middleware/auth');
 const authRoutes    = require('./routes/auth');
 const adminRoutes   = require('./routes/admin');
 const userRoutes    = require('./routes/user');
+const { payosWebhook } = require('./controllers/user/paymentController');
 
 dotenv.config();
 connectDB();
@@ -38,6 +39,9 @@ app.use(setLocals);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
+
+// PayOS webhook — không cần auth
+app.post('/webhook/payos', payosWebhook);
 
 app.get('/', (req, res) => {
   if (!req.session.user) return res.redirect('/auth/login');

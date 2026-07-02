@@ -34,6 +34,11 @@ const invoiceSchema = new mongoose.Schema({
   isPaid:         { type: Boolean, default: false },
   paidAt:         { type: Date },
   note:           { type: String },
+
+  // PayOS
+  payosOrderCode:   { type: Number },
+  payosCheckoutUrl: { type: String },
+  payosStatus:      { type: String, default: 'PENDING' }, // PENDING | PAID | CANCELLED
 }, { timestamps: true });
 
 // Tự tạo mã hóa đơn
