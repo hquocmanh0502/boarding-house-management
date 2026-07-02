@@ -97,8 +97,7 @@ const getInvoices = async (req, res) => {
 const getInvoiceDetail = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id).populate('room');
-    const settings = await require('../../models/Settings').findOne() || {};
-    res.render('user/invoice-detail', { title: `Hóa đơn tháng ${invoice.month}/${invoice.year}`, invoice, settings, moment });
+    res.render('user/invoice-detail', { title: `Hóa đơn tháng ${invoice.month}/${invoice.year}`, invoice, moment });
   } catch (err) {
     req.flash('error', 'Không tìm thấy hóa đơn');
     res.redirect('/user/invoices');

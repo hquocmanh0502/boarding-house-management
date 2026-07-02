@@ -15,12 +15,11 @@ const getSettings = async (req, res) => {
 // POST /admin/settings
 const postSettings = async (req, res) => {
   try {
-    const { electricPrice, waterPrice, servicePrice, bankName, bankAccount, bankOwner, landlordName, landlordPhone, address } = req.body;
+    const { electricPrice, waterPrice, servicePrice, landlordName, landlordPhone, address } = req.body;
     await Settings.findOneAndUpdate({}, {
       electricPrice: +electricPrice,
       waterPrice: +waterPrice,
       servicePrice: +servicePrice,
-      bankName, bankAccount, bankOwner,
       landlordName, landlordPhone, address
     }, { upsert: true });
     req.flash('success', 'Lưu cài đặt thành công');

@@ -98,9 +98,7 @@ async function seed() {
   settings.electricPrice = ELECTRIC_PRICE;
   settings.waterPrice    = WATER_PRICE;
   settings.servicePrice  = SERVICE_PRICE;
-  settings.bankName      = 'MB Bank';
-  settings.bankAccount   = '0001234567890';
-  settings.bankOwner     = 'Nguyen Van Chu Tro';
+  settings.landlordName  = 'Nguyen Van Chu Tro';
   await settings.save();
   console.log('✅ Cài đặt đã cập nhật');
 

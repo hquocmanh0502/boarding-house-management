@@ -63,18 +63,6 @@
     </div>
   </div>
 
-  <% if (settings.bankAccount) { %>
-  <div class="mt-4 p-3 bg-light rounded-3">
-    <h6 class="fw-bold mb-2"><i class="fa-solid fa-building-columns me-2"></i>Thông tin chuyển khoản</h6>
-    <div class="small">
-      <div><strong>Ngân hàng:</strong> <%= settings.bankName %></div>
-      <div><strong>Số TK:</strong> <code class="fs-6"><%= settings.bankAccount %></code></div>
-      <div><strong>Chủ TK:</strong> <%= settings.bankOwner %></div>
-      <div><strong>Nội dung CK:</strong> <code>P<%= invoice.room?.roomNumber %> T<%= invoice.month %>/<%= invoice.year %></code></div>
-    </div>
-  </div>
-  <% } %>
-
   <% if (!invoice.isPaid) { %>
   <form action="/admin/invoices/<%= invoice._id %>/pay" method="POST" class="mt-3">
     <button class="btn btn-success w-100"><i class="fa-solid fa-check me-2"></i>Xác nhận đã thanh toán</button>

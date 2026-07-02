@@ -79,8 +79,7 @@ const postCreate = async (req, res) => {
 const getDetail = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id).populate('room');
-    const settings = await Settings.findOne() || {};
-    res.render('admin/invoices/detail', { title: 'Chi tiết hóa đơn', invoice, settings, moment });
+    res.render('admin/invoices/detail', { title: 'Chi tiết hóa đơn', invoice, moment });
   } catch (err) {
     req.flash('error', 'Không tìm thấy hóa đơn');
     res.redirect('/admin/invoices');

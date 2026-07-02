@@ -82,29 +82,6 @@
     </div>
   </div>
 
-  <!-- Hoặc chuyển khoản thủ công -->
-  <% if (settings.bankAccount) { %>
-  <details class="rounded-3 overflow-hidden">
-    <summary class="p-3 bg-light" style="cursor:pointer; list-style:none; user-select:none;">
-      <i class="fa-solid fa-building-columns me-2 text-secondary"></i>
-      <span class="fw-semibold text-secondary small">Hoặc chuyển khoản thủ công</span>
-      <i class="fa-solid fa-chevron-down ms-2 text-muted" style="font-size:11px"></i>
-    </summary>
-    <div class="p-3 bg-light border-top">
-      <div class="row g-2 small">
-        <div class="col-5 text-muted">Ngân hàng:</div><div class="col-7 fw-semibold"><%= settings.bankName %></div>
-        <div class="col-5 text-muted">Số tài khoản:</div>
-        <div class="col-7"><code class="fs-6 fw-bold text-primary"><%= settings.bankAccount %></code></div>
-        <div class="col-5 text-muted">Chủ TK:</div><div class="col-7"><%= settings.bankOwner %></div>
-        <div class="col-5 text-muted">Số tiền:</div>
-        <div class="col-7 text-danger fw-bold"><%= invoice.totalAmount.toLocaleString('vi-VN') %>đ</div>
-        <div class="col-5 text-muted">Nội dung:</div>
-        <div class="col-7"><code>P<%= invoice.room?.roomNumber %> T<%= invoice.month %>/<%= invoice.year %></code></div>
-      </div>
-    </div>
-  </details>
-  <% } %>
-
   <% } else { %>
   <!-- Đã thanh toán -->
   <div class="text-center p-4 rounded-3" style="background: #f0fdf4; border: 1px solid #86efac;">
