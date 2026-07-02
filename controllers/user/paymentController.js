@@ -37,7 +37,7 @@ const createPayment = async (req, res) => {
       cancelUrl:  `${APP_URL}/user/payment/cancel?invoiceId=${invoice._id}`,
     };
 
-    const paymentLink = await getPayOS().createPaymentLink(paymentData);
+    const paymentLink = await getPayOS().paymentRequests.create(paymentData);
 
     // Lưu orderCode + checkoutUrl vào invoice
     invoice.payosOrderCode   = orderCode;
@@ -63,7 +63,7 @@ const paymentSuccess = async (req, res) => {
 
     if (!isPaid && orderCode) {
       try {
-        const paymentInfo = await getPayOS().getPaymentLinkInformation(orderCode);
+        const paymentInfo = await getPayOS().paymentRequests.get(orderCode);
         isPaid = paymentInfo.status === 'PAID';
       } catch (e) {
         console.error('PayOS verify error:', e.message);
@@ -106,11 +106,11 @@ const paymentCancel = async (req, res) => {
 // POST /webhook/payos  →  PayOS gọi để xác nhận thanh toán (production)
 const payosWebhook = async (req, res) => {
   try {
-    const webhookData = getPayOS().verifyPaymentWebhookData(req.body);
-
-    if (webhookData.code === '00' && webhookData.desc === 'success') {
-      // Tìm invoice theo orderCode
-      const invoice = await Invoice.findOne({ payosOrderCode: webhookData.data?.orderCode });
+    const webhookData = await getPayOS().webhooks.verify(req.body);
+    // webhookData.data.orderCode chứa orderCode
+    const orderCode = webhookData?.data?.orderCode;
+    if (orderCode) {
+      const invoice = await Invoice.findOne({ payosOrderCode: orderCode });
       if (invoice && !invoice.isPaid) {
         invoice.isPaid      = true;
         invoice.paidAt      = new Date();
@@ -120,10 +120,9 @@ const payosWebhook = async (req, res) => {
         console.log(`✅ Webhook: Invoice ${invoice.invoiceCode} đã được xác nhận thanh toán`);
       }
     }
-
     return res.json({ error: 0 });
   } catch (err) {
-    console.error('PayOS webhook error:', err);
+    console.error('PayOS webhook error:', err.message);
     return res.json({ error: -1, message: err.message });
   }
 };
