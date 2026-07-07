@@ -158,7 +158,7 @@ body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
 }
 .page-header h4 { font-weight: 700; margin: 0; color: #1e1b4b; }
 
-/* ===== trang đăng nhập ===== */
+/* ===== LOGIN PAGE ===== */
 .login-wrapper {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;

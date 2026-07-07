@@ -12,8 +12,6 @@ const removeAccents = (str) => {
 
 /**
  * Tự động tạo username từ họ tên + năm sinh
- *
- * 
  * Ví dụ: "Hoàng Quốc Mạnh", 2004 → "manh2004"
  */
 const generateUsername = (fullName, birthDate) => {

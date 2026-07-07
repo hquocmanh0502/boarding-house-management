@@ -1,0 +1,13 @@
+[1mdiff --git a/public/css/style.css b/public/css/style.css[m
+[1mindex 5c4e02f..d967d59 100644[m
+[1m--- a/public/css/style.css[m
+[1m+++ b/public/css/style.css[m
+[36m@@ -158,7 +158,7 @@[m [mbody { font-family: 'Inter', sans-serif; background: #f0f2f5; }[m
+ }[m
+ .page-header h4 { font-weight: 700; margin: 0; color: #1e1b4b; }[m
+ [m
+[31m-/* ===== LOGIN PAGE ===== */[m
+[32m+[m[32m/* ===== trang đn ===== */[m
+ .login-wrapper {[m
+   min-height: 100vh;[m
+   display: flex; align-items: center; justify-content: center;[m
