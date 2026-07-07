@@ -52,9 +52,12 @@ app.use((req, res) => {
   res.status(404).send('404 - Trang khong tim thay');
 });
 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server chay tai http://localhost:${PORT}`);
+
+  console.log(`Moi truong: ${process.env.NODE_ENV || 'development'}`);
 });
 
 module.exports = app;
