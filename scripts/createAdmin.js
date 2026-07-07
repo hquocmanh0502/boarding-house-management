@@ -2,7 +2,15 @@
  * Script tạo tài khoản admin lần đầu
  * Chạy: node scripts/createAdmin.js
  */
+
 require('dotenv').config();
+
+const dns = require('dns');
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
+console.log('DNS:', dns.getServers());
+
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
@@ -15,21 +23,18 @@ async function createAdmin() {
     console.log('⚠️  Admin đã tồn tại:', existing.username);
     process.exit(0);
   }
-
   await User.create({
     fullName: 'Quản Trị Viên',
     username: 'admin',
     password: 'Admin@123',
     role: 'admin',
   });
-
-  console.log('✅ Tạo admin thành công!');
+  console.log(' Tạo admin thành công!');
   console.log('   Username : admin');
   console.log('   Password : Admin@123');
   process.exit(0);
 }
-
 createAdmin().catch(err => {
-  console.error('❌ Lỗi:', err.message);
+  console.error(' Lỗi:', err.message);
   process.exit(1);
 });
