@@ -20,7 +20,7 @@ const ELECTRIC_PRICE = 3500;   // đ/kWh
 const WATER_PRICE    = 15000;  // đ/m³
 const SERVICE_PRICE  = 50000;  // đ/người/tháng
 
-// ─── 4 phòng ────────────────────────────────────────────────────────────────
+// ─── 4 phòng ──────────────────────────────────────────────────────────────
 const ROOMS_DATA = [
   { roomNumber: '101', rentPrice: 2000000, floor: 1, area: 25, maxTenants: 2,
     amenities: ['bed','wardrobe','ac','wifi','private_wc'],

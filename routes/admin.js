@@ -12,7 +12,7 @@ const settings      = require('../controllers/admin/settingsController');
 
 router.use(isAdmin);
 
-// Dashboard
+// chính dashboard
 router.get('/dashboard', dashboard.getDashboard);
 
 // Tenants
