@@ -1,0 +1,41 @@
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <i class="fa-solid fa-house-chimney"></i>
+    <span>Nhà Trọ Admin</span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Tổng quan</div>
+    <a href="/admin/dashboard" class="nav-item <%= typeof title !== 'undefined' && title === 'Dashboard' ? 'active' : '' %>">
+      <i class="fa-solid fa-gauge-high"></i> Dashboard
+    </a>
+
+    <div class="nav-label">Quản lý</div>
+    <a href="/admin/rooms" class="nav-item">
+      <i class="fa-solid fa-door-open"></i> Phòng trọ
+    </a>
+    <a href="/admin/tenants" class="nav-item">
+      <i class="fa-solid fa-users"></i> Khách thuê
+    </a>
+    <a href="/admin/contracts" class="nav-item">
+      <i class="fa-solid fa-file-contract"></i> Hợp đồng
+    </a>
+
+    <div class="nav-label">Tài chính</div>
+    <a href="/admin/invoices" class="nav-item">
+      <i class="fa-solid fa-file-invoice-dollar"></i> Hóa đơn
+    </a>
+
+    <div class="nav-label">Tiện ích</div>
+    <a href="/admin/notifications" class="nav-item">
+      <i class="fa-solid fa-bell"></i> Thông báo
+    </a>
+    <a href="/admin/settings" class="nav-item">
+      <i class="fa-solid fa-gear"></i> Cài đặt
+    </a>
+
+    <div class="nav-divider"></div>
+    <a href="/auth/logout" class="nav-item text-danger">
+      <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+    </a>
+  </nav>
+</aside>

@@ -1,0 +1,138 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-plus me-2 text-primary"></i>Tạo hóa đơn</h4>
+  <a href="/admin/invoices" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/invoices/create" method="POST" id="invoiceForm">
+          <div class="row g-3">
+            <!-- Phòng & Tháng -->
+            <div class="col-md-4">
+              <label class="form-label">Phòng <span class="text-danger">*</span></label>
+              <select name="roomId" class="form-select" required>
+                <option value="">— Chọn phòng —</option>
+                <% rooms.forEach(r => { %>
+                  <option value="<%= r._id %>" data-rent="<%= r.rentPrice %>">
+                    Phòng <%= r.roomNumber %> (<%= r.tenants.length %> người)
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tháng</label>
+              <input type="number" name="month" class="form-control" value="<%= currentMonth %>" min="1" max="12" required/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Năm</label>
+              <input type="number" name="year" class="form-control" value="<%= currentYear %>" required/>
+            </div>
+
+            <div class="col-12"><hr class="my-1"/><h6 class="fw-bold text-primary"><i class="fa-solid fa-bolt me-2"></i>Điện</h6></div>
+            <div class="col-md-4">
+              <label class="form-label">Chỉ số đầu kỳ</label>
+              <input type="number" name="electricOldIndex" class="form-control calc-input" placeholder="0" value="0" min="0"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Chỉ số cuối kỳ</label>
+              <input type="number" name="electricNewIndex" class="form-control calc-input" placeholder="0" value="0" min="0"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Giá 1 số (đ/kWh)</label>
+              <input type="number" name="electricPrice" class="form-control calc-input" value="<%= settings.electricPrice || 3500 %>" required/>
+            </div>
+
+            <div class="col-12"><hr class="my-1"/><h6 class="fw-bold text-primary"><i class="fa-solid fa-droplet me-2"></i>Nước</h6></div>
+            <div class="col-md-4">
+              <label class="form-label">Chỉ số đầu kỳ</label>
+              <input type="number" name="waterOldIndex" class="form-control calc-input" placeholder="0" value="0" min="0"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Chỉ số cuối kỳ</label>
+              <input type="number" name="waterNewIndex" class="form-control calc-input" placeholder="0" value="0" min="0"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Giá 1 khối (đ/m³)</label>
+              <input type="number" name="waterPrice" class="form-control calc-input" value="<%= settings.waterPrice || 15000 %>" required/>
+            </div>
+
+            <div class="col-12"><hr class="my-1"/><h6 class="fw-bold text-primary"><i class="fa-solid fa-concierge-bell me-2"></i>Dịch vụ & Tiền phòng</h6></div>
+            <div class="col-md-4">
+              <label class="form-label">Phí dịch vụ/người</label>
+              <input type="number" name="servicePrice" class="form-control calc-input" value="<%= settings.servicePrice || 50000 %>"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tiền thuê phòng</label>
+              <input type="number" name="rentPrice" id="rentPriceInput" class="form-control calc-input" value="0" required/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Ghi chú</label>
+              <input type="text" name="note" class="form-control" placeholder="Ghi chú thêm..."/>
+            </div>
+          </div>
+
+          <!-- Preview tính tiền -->
+          <div class="alert alert-light border mt-4" id="preview">
+            <h6 class="fw-bold mb-3"><i class="fa-solid fa-calculator me-2"></i>Dự tính hóa đơn</h6>
+            <div class="row g-2 small">
+              <div class="col-6">Tiền điện:</div><div class="col-6 text-end fw-semibold" id="prev-electric">0đ</div>
+              <div class="col-6">Tiền nước:</div><div class="col-6 text-end fw-semibold" id="prev-water">0đ</div>
+              <div class="col-6">Dịch vụ:</div><div class="col-6 text-end fw-semibold" id="prev-service">0đ</div>
+              <div class="col-6">Tiền phòng:</div><div class="col-6 text-end fw-semibold" id="prev-rent">0đ</div>
+              <div class="col-12"><hr class="my-1"/></div>
+              <div class="col-6 fw-bold text-primary fs-6">TỔNG CỘNG:</div>
+              <div class="col-6 text-end fw-bold text-primary fs-6" id="prev-total">0đ</div>
+            </div>
+          </div>
+
+          <div class="d-grid mt-3">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-file-invoice-dollar me-2"></i>Tạo hóa đơn
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cập nhật tiền thuê khi chọn phòng
+document.querySelector('[name="roomId"]').addEventListener('change', function() {
+  const opt = this.options[this.selectedIndex];
+  document.getElementById('rentPriceInput').value = opt.dataset.rent || 0;
+  calcPreview();
+});
+
+function fmt(n) { return Number(n||0).toLocaleString('vi-VN') + 'đ'; }
+
+function calcPreview() {
+  const eOld = +document.querySelector('[name="electricOldIndex"]').value;
+  const eNew  = +document.querySelector('[name="electricNewIndex"]').value;
+  const ePrice = +document.querySelector('[name="electricPrice"]').value;
+  const wOld  = +document.querySelector('[name="waterOldIndex"]').value;
+  const wNew   = +document.querySelector('[name="waterNewIndex"]').value;
+  const wPrice = +document.querySelector('[name="waterPrice"]').value;
+  const sPrice = +document.querySelector('[name="servicePrice"]').value;
+  const rent   = +document.getElementById('rentPriceInput').value;
+
+  const electric = Math.max(0, eNew - eOld) * ePrice;
+  const water    = Math.max(0, wNew - wOld) * wPrice;
+  const service  = sPrice; // sẽ nhân với số người khi lưu
+  const total    = electric + water + service + rent;
+
+  document.getElementById('prev-electric').textContent = fmt(electric);
+  document.getElementById('prev-water').textContent    = fmt(water);
+  document.getElementById('prev-service').textContent  = fmt(service) + ' (×số người)';
+  document.getElementById('prev-rent').textContent     = fmt(rent);
+  document.getElementById('prev-total').textContent    = fmt(total) + '+';
+}
+
+document.querySelectorAll('.calc-input').forEach(el => el.addEventListener('input', calcPreview));
+calcPreview();
+</script>
+
+<%- include('../../partials/footer') %>

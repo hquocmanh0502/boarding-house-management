@@ -1,0 +1,65 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-pen me-2 text-primary"></i>Sửa thông tin: <%= tenant.fullName %></h4>
+  <a href="/admin/tenants" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-body p-4">
+        <div class="text-center mb-4">
+          <div class="user-avatar-lg"><%= tenant.fullName.charAt(0).toUpperCase() %></div>
+          <h6 class="fw-bold"><%= tenant.fullName %></h6>
+          <code class="text-muted"><%= tenant.username %></code>
+        </div>
+        <form action="/admin/tenants/<%= tenant._id %>/edit" method="POST">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Họ và tên</label>
+              <input type="text" name="fullName" class="form-control" value="<%= tenant.fullName %>" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày sinh</label>
+              <input type="date" name="birthDate" class="form-control"
+                value="<%= tenant.birthDate ? moment(tenant.birthDate).format('YYYY-MM-DD') : '' %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" name="phone" class="form-control" value="<%= tenant.phone || '' %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số CCCD</label>
+              <input type="text" name="idCard" class="form-control" value="<%= tenant.idCard || '' %>"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Trạng thái</label>
+              <select name="isActive" class="form-select">
+                <option value="true" <%= tenant.isActive ? 'selected' : '' %>>Hoạt động</option>
+                <option value="false" <%= !tenant.isActive ? 'selected' : '' %>>Ngưng hoạt động</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Gán vào phòng</label>
+              <select name="roomId" class="form-select">
+                <option value="">— Không có phòng —</option>
+                <% rooms.forEach(r => { %>
+                  <option value="<%= r._id %>" <%= tenant.room && tenant.room._id.toString() === r._id.toString() ? 'selected' : '' %>>
+                    Phòng <%= r.roomNumber %> — <%= r.rentPrice.toLocaleString('vi-VN') %>đ/tháng
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-floppy-disk me-2"></i>Lưu thay đổi
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>

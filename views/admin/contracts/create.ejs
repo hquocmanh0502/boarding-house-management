@@ -1,0 +1,147 @@
+<%- include('../../partials/header-admin') %>
+
+<div class="page-header">
+  <h4><i class="fa-solid fa-plus me-2 text-primary"></i>Tạo hợp đồng mới</h4>
+  <a href="/admin/contracts" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body p-4">
+        <form action="/admin/contracts/create" method="POST" enctype="multipart/form-data">
+          <div class="row g-3">
+
+            <!-- Chọn khách thuê - tự điền thông tin -->
+            <div class="col-12">
+              <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-user me-2"></i>Thông tin bên thuê (B)</h6>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Chọn khách thuê <span class="text-danger">*</span></label>
+              <select name="userId" id="tenantSelect" class="form-select" required>
+                <option value="">— Chọn khách thuê —</option>
+                <% tenants.forEach(t => { %>
+                  <option value="<%= t._id %>"><%= t.fullName %> (<%= t.username %>)</option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Họ và tên</label>
+              <input type="text" id="fill_fullName" class="form-control bg-light" readonly placeholder="Tự điền khi chọn khách thuê"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" id="fill_phone" class="form-control bg-light" readonly placeholder="—"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Số CCCD</label>
+              <input type="text" id="fill_idCard" class="form-control bg-light" readonly placeholder="—"/>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Ngày sinh</label>
+              <input type="text" id="fill_birthDate" class="form-control bg-light" readonly placeholder="—"/>
+            </div>
+
+            <!-- Chọn phòng -->
+            <div class="col-12 mt-2">
+              <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-door-open me-2"></i>Thông tin phòng</h6>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Chọn phòng <span class="text-danger">*</span></label>
+              <select name="roomId" id="roomSelect" class="form-select" required>
+                <option value="">— Chọn phòng —</option>
+                <% rooms.forEach(r => { %>
+                  <option value="<%= r._id %>" data-rent="<%= r.rentPrice %>">
+                    Phòng <%= r.roomNumber %> (<%= r.status === 'available' ? 'Trống' : 'Có người' %>) — <%= r.rentPrice.toLocaleString('vi-VN') %>đ
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Giá thuê/tháng (đ)</label>
+              <input type="number" name="rentPrice" id="rentPrice" class="form-control" value="0" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
+              <input type="date" name="startDate" class="form-control" required/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ngày kết thúc</label>
+              <input type="date" name="endDate" class="form-control"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tiền cọc (đ)</label>
+              <input type="number" name="depositAmount" class="form-control" value="0"/>
+            </div>
+
+            <!-- Upload ảnh hợp đồng -->
+            <div class="col-12 mt-2">
+              <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fa-solid fa-image me-2"></i>Ảnh hợp đồng</h6>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tải lên ảnh hợp đồng (tùy chọn)</label>
+              <input type="file" name="contractImage" id="contractImageInput" class="form-control" accept="image/*"/>
+              <small class="text-muted">Hỗ trợ JPG, PNG, HEIC... Tối đa 10MB</small>
+              <!-- Preview ảnh -->
+              <div id="imagePreview" class="mt-3 d-none">
+                <img id="previewImg" src="" class="img-fluid rounded-3 border" style="max-height:300px; object-fit:contain;"/>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Điều khoản hợp đồng</label>
+              <textarea name="terms" class="form-control" rows="4"
+                placeholder="VD: Không nuôi động vật, không ở quá giờ giấc quy định..."></textarea>
+            </div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary py-2">
+              <i class="fa-solid fa-file-contract me-2"></i>Tạo hợp đồng
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Dữ liệu khách thuê để tự điền
+const tenantsData = <%- JSON.stringify(tenantsJson) %>;
+
+document.getElementById('tenantSelect').addEventListener('change', function() {
+  const tenant = tenantsData.find(t => t._id === this.value);
+  if (tenant) {
+    document.getElementById('fill_fullName').value  = tenant.fullName || '';
+    document.getElementById('fill_phone').value     = tenant.phone || '—';
+    document.getElementById('fill_idCard').value    = tenant.idCard || '—';
+    document.getElementById('fill_birthDate').value = tenant.birthDate || '—';
+  } else {
+    ['fill_fullName','fill_phone','fill_idCard','fill_birthDate'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  }
+});
+
+// Tự điền giá thuê khi chọn phòng
+document.getElementById('roomSelect').addEventListener('change', function() {
+  const rent = this.options[this.selectedIndex].dataset.rent || 0;
+  document.getElementById('rentPrice').value = rent;
+});
+
+// Preview ảnh trước khi upload
+document.getElementById('contractImageInput').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('imagePreview').classList.remove('d-none');
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+
+<%- include('../../partials/footer') %>
+

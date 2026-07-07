@@ -1,0 +1,60 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-users me-2 text-primary"></i>Quản lý khách thuê</h4>
+  <a href="/admin/tenants/create" class="btn btn-primary">
+    <i class="fa-solid fa-user-plus me-1"></i> Thêm khách thuê
+  </a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr>
+          <th>Họ và tên</th><th>Tài khoản</th><th>SĐT</th><th>CCCD</th><th>Ngày sinh</th><th>Phòng</th><th>Trạng thái</th><th>Hành động</th>
+        </tr></thead>
+        <tbody>
+        <% if (tenants.length === 0) { %>
+          <tr><td colspan="8" class="text-center py-5 text-muted">Chưa có khách thuê nào</td></tr>
+        <% } %>
+        <% tenants.forEach(t => { %>
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar-sm" style="width:32px;height:32px;font-size:13px;border-radius:8px;">
+                  <%= t.fullName.charAt(0).toUpperCase() %>
+                </div>
+                <strong><%= t.fullName %></strong>
+              </div>
+            </td>
+            <td><code><%= t.username %></code></td>
+            <td><%= t.phone || '—' %></td>
+            <td><%= t.idCard || '—' %></td>
+            <td><%= t.birthDate ? moment(t.birthDate).format('DD/MM/YYYY') : '—' %></td>
+            <td>
+              <% if (t.room) { %>
+                <span class="badge-occupied">Phòng <%= t.room.roomNumber %></span>
+              <% } else { %><span class="text-muted">—</span><% } %>
+            </td>
+            <td>
+              <% if (t.isActive) { %><span class="badge-available">Hoạt động</span>
+              <% } else { %><span class="badge-expired">Ngưng</span><% } %>
+            </td>
+            <td>
+              <a href="/admin/tenants/<%= t._id %>/edit" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <form action="/admin/tenants/<%= t._id %>/delete" method="POST" class="d-inline"
+                onsubmit="return confirm('Xác nhận xóa khách thuê <%= t.fullName %>?')">
+                <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>

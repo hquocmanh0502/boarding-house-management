@@ -1,0 +1,39 @@
+<%- include('../partials/header-user') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>Hóa đơn của tôi</h4>
+</div>
+
+<div class="row g-3">
+<% invoices.forEach(inv => { %>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <div class="fw-bold fs-6 mb-1">
+            <i class="fa-solid fa-calendar me-2 text-muted"></i>Tháng <%= inv.month %>/<%= inv.year %>
+          </div>
+          <div class="d-flex gap-4 mt-2 small text-muted">
+            <span><i class="fa-solid fa-bolt text-warning me-1"></i><%= inv.electricUsage %> kWh</span>
+            <span><i class="fa-solid fa-droplet text-primary me-1"></i><%= inv.waterUsage %> m³</span>
+          </div>
+        </div>
+        <div class="text-end">
+          <div class="fw-bold fs-5 text-primary mb-1"><%= inv.totalAmount.toLocaleString('vi-VN') %>đ</div>
+          <% if (inv.isPaid) { %><span class="badge-paid">✓ Đã thanh toán</span>
+          <% } else { %><span class="badge-unpaid">⚠ Chưa thanh toán</span><% } %>
+        </div>
+        <a href="/user/invoices/<%= inv._id %>" class="btn btn-outline-primary btn-sm">
+          <i class="fa-solid fa-eye me-1"></i>Xem chi tiết
+        </a>
+      </div>
+    </div>
+  </div>
+<% }) %>
+<% if (invoices.length === 0) { %>
+  <div class="col-12 text-center py-5 text-muted">
+    <i class="fa-solid fa-file-circle-question fa-3x mb-3 d-block opacity-25"></i>Chưa có hóa đơn nào
+  </div>
+<% } %>
+</div>
+
+<%- include('../partials/footer') %>

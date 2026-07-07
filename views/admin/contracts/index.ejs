@@ -1,0 +1,62 @@
+<%- include('../../partials/header-admin') %>
+<div class="page-header">
+  <h4><i class="fa-solid fa-file-contract me-2 text-primary"></i>Hợp đồng thuê trọ</h4>
+  <a href="/admin/contracts/create" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Tạo hợp đồng</a>
+</div>
+
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead><tr>
+          <th>Mã HĐ</th><th>Khách thuê</th><th>Phòng</th><th>Ngày bắt đầu</th><th>Ngày kết thúc</th><th>Tiền cọc</th><th>Trạng thái</th><th>Hành động</th>
+        </tr></thead>
+        <tbody>
+        <% contracts.forEach(c => { %>
+          <tr>
+            <td><code><%= c.contractCode %></code></td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="user-avatar-sm" style="width:30px;height:30px;font-size:12px;border-radius:7px">
+                  <%= c.user?.fullName?.charAt(0)?.toUpperCase() %>
+                </div>
+                <span><%= c.user?.fullName %></span>
+              </div>
+            </td>
+            <td><strong>Phòng <%= c.room?.roomNumber %></strong></td>
+            <td><%= moment(c.startDate).format('DD/MM/YYYY') %></td>
+            <td><%= c.endDate ? moment(c.endDate).format('DD/MM/YYYY') : '—' %></td>
+            <td><%= c.depositAmount.toLocaleString('vi-VN') %>đ</td>
+            <td><span class="badge-<%= c.status %>">
+              <%= c.status === 'active' ? 'Đang hiệu lực' : c.status === 'expired' ? 'Hết hạn' : 'Đã chấm dứt' %>
+            </span></td>
+            <td>
+              <a href="/admin/contracts/<%= c._id %>" class="btn btn-sm btn-outline-primary">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <% if (c.contractImage) { %>
+                <a href="/admin/contracts/<%= c._id %>" class="btn btn-sm btn-outline-success" title="Có ảnh hợp đồng">
+                  <i class="fa-solid fa-image"></i>
+                </a>
+              <% } %>
+              <% if (c.status === 'active') { %>
+              <form action="/admin/contracts/<%= c._id %>/terminate" method="POST" class="d-inline"
+                onsubmit="return confirm('Chấm dứt hợp đồng này?')">
+                <button class="btn btn-sm btn-outline-danger" title="Chấm dứt HĐ">
+                  <i class="fa-solid fa-ban"></i>
+                </button>
+              </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+        <% if (contracts.length === 0) { %>
+          <tr><td colspan="8" class="text-center py-5 text-muted">Chưa có hợp đồng nào</td></tr>
+        <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>
