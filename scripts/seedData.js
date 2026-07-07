@@ -2,7 +2,15 @@
  * Seed realistic data: 4 rooms, 5 tenants, 6 months invoices (Jan–Jun 2026)
  * Run: node scripts/seedData.js
  */
+
 require('dotenv').config();
+
+const dns = require('dns');
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
+console.log('DNS:', dns.getServers());
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
