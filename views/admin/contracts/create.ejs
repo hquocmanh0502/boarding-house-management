@@ -108,8 +108,7 @@
 
 <script>
 // Dữ liệu khách thuê để tự điền
-const tenantsData = <%- JSON.stringify(tenantsJson) %>;
-
+const tenantsData = <%- JSON.stringify(tenants) %>;
 document.getElementById('tenantSelect').addEventListener('change', function() {
   const tenant = tenantsData.find(t => t._id === this.value);
   if (tenant) {
